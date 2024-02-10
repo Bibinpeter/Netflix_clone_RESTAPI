@@ -40,38 +40,12 @@ class Comingsoon extends StatelessWidget {
         SizedBox(
           width: size.width - 60,
           height: 480,
-          child: Column(
+          child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start ,
              children: [
-              Stack(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 200,
-                    child: Image.network(
-                      "https://media.themoviedb.org/t/p/w533_and_h300_bestv2/xMXK7OoT5GkaZrzQBque6nGwuL1.jpg",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 5,
-                    right: 10,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black.withOpacity(0.5),
-                      radius: 20,
-                      child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.volume_off,
-                            size: 20,
-                            color: Kwhitecolor,
-                          )),
-                    ),
-                  ),
-                ],
-              ),
+              VideoWidget(),
               Kheight,
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -121,6 +95,43 @@ class Comingsoon extends StatelessWidget {
                 fontWeight: FontWeight.w700),),
                 Text("Landing the lead in the school muscical is a\ndream come true for jodi until the presurre\nsends her confidence-and her relationship\nintoa tallpin.",style: TextStyle(color: Colors.grey),)
             ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class VideoWidget extends StatelessWidget {
+  const VideoWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: 200,
+          child: Image.network(
+            "https://media.themoviedb.org/t/p/w533_and_h300_bestv2/xMXK7OoT5GkaZrzQBque6nGwuL1.jpg",
+            fit: BoxFit.cover,
+          ),
+        ),
+        Positioned(
+          bottom: 5,
+          right: 10,
+          child: CircleAvatar(
+            backgroundColor: Colors.black.withOpacity(0.5),
+            radius: 20,
+            child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.volume_off,
+                  size: 20,
+                  color: Kwhitecolor,
+                )),
           ),
         ),
       ],

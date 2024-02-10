@@ -1,7 +1,10 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:netflixapi/core/colors/colors.dart';
 import 'package:netflixapi/core/colors/constants.dart';
+import 'package:netflixapi/presentation/home/widget/custom_addbutton.dart';
 import 'package:netflixapi/presentation/new&hot/widgets/coming_soon.dart';
+import 'package:netflixapi/presentation/new&hot/widgets/everyoneswatching.dart';
 
 class ScreenNewAndHot extends StatelessWidget {
   const ScreenNewAndHot({super.key});
@@ -51,28 +54,30 @@ class ScreenNewAndHot extends StatelessWidget {
             ),
           ),
         ),
-        body: TabBarView(children: [
-          _buildComingSoon(),
-          _buildEveryOneWathing(),
-        ],
+        body: TabBarView(
+          children: [
+            _buildComingSoon(),
+            _buildEveryOneWathing(),
+          ],
         ),
       ),
     );
   }
-
+////////// TAB 1 FN
   Widget _buildComingSoon() {
     return ListView.builder(
-      physics: BouncingScrollPhysics(),
-      itemCount: 10, 
-      itemBuilder:(context, index)=>const Comingsoon(),
-    
+      physics: const BouncingScrollPhysics(),
+      itemCount: 10,
+      itemBuilder: (context, index) => const Comingsoon(),
     );
-     
-    
   }
-
+///////// TAB 2 FN
   Widget _buildEveryOneWathing() {
-    return SizedBox();
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      itemCount: 10,
+      itemBuilder: (context, index) => const EveryonesWatchingwidget(),
+    );
   }
 }
 

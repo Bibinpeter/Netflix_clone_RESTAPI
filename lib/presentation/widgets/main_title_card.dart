@@ -1,40 +1,60 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
 import 'package:netflixapi/core/colors/constants.dart';
 import 'package:netflixapi/presentation/widgets/main_homecard.dart';
 import 'package:netflixapi/presentation/widgets/main_title.dart';
 
-class MainTittleCard extends StatelessWidget {
-  const MainTittleCard({
-    super.key,required this.title
-  });
-final String title;
+class MainTitleCard extends StatelessWidget {
+  final String title;
+  final Future<List<dynamic>> movies;
+
+  const MainTitleCard({
+    Key? key,
+    required this.title,
+    required this.movies,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         MainTitle(
-          title:title,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: MainTitle(title: title),
         ),
-        LimitedBox(
-          maxHeight: 250,
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(5),
-            scrollDirection: Axis.horizontal,
-            children: List.generate(
-              10,
-              (index) => const Padding(
-                padding: EdgeInsets.only(right: 12.0), // Adjust the right spacing as needed
-                child: MainCardHome(),
-              ),
-            ),
-          ),
+        FutureBuilder(
+          future: movies,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              return LimitedBox(
+                maxHeight: 200,
+                child: ListView(
+
+                  scrollDirection: Axis.horizontal,
+                  children: List.generate(
+                    snapshot.data!.length,
+                    (index) {
+                      final movie = snapshot.data![index];
+                      final imageUrl =
+                          constants.ImagePath + (movie.poster_path?? '');
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: MainCardHome(image:imageUrl),
+                      );
+                    },
+                  ),
+                ),
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
         ),
+        Kheight,
       ],
     );
   }
 }
-
-
- 

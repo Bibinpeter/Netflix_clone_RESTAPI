@@ -3,31 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:netflixapi/core/colors/colors.dart';
 
 class NumberCard extends StatelessWidget {
-  const NumberCard({super.key,required this.index});
+   NumberCard({super.key,required this.index,
+   required this.image});
 final int index;
+final String image;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Row(
+         Row(
           children: [
-            const SizedBox(height:150,width:70,),
-            Container( 
-              width: 140, 
-              height: 260, 
-              decoration: BoxDecoration( 
-                borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                  image: NetworkImage("https://media.themoviedb.org/t/p/w220_and_h330_face/ofTnrgEwtPILNfjwk0FAx3bfwZ6.jpg"),
-                 fit: BoxFit.cover
-                ),
-              ),
+            const SizedBox(
+              width: 40,
+              height: 200,
+            ),
+            Container(
+              width: 150,
+              height: 200,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                      fit: BoxFit.cover, image: NetworkImage(image))),
             ),
           ],
         ),
       Positioned(
   left: 10,
-  top: 80,
+  top: 38,
   child: ShaderMask(
     shaderCallback: (Rect bounds) {
       return const LinearGradient(

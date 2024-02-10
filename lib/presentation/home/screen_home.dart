@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:netflixapi/api/api.dart';
 import 'package:netflixapi/core/colors/colors.dart';
 import 'package:netflixapi/core/colors/constants.dart';
+import 'package:netflixapi/models/movie.dart';
 import 'package:netflixapi/presentation/home/widget/background_card.dart';
 import 'package:netflixapi/presentation/home/widget/number_card.dart';
 import 'package:netflixapi/presentation/widgets/main_title.dart';
@@ -9,10 +11,32 @@ import 'package:netflixapi/presentation/widgets/main_title_card.dart';
 
 ValueNotifier<bool> scrollNotifier = ValueNotifier(false);
 
-class ScreenHome extends StatelessWidget {
+class ScreenHome extends StatefulWidget {
   const ScreenHome({
     super.key,
   });
+
+  @override
+  State<ScreenHome> createState() => _ScreenHomeState();
+}
+
+class _ScreenHomeState extends State<ScreenHome> {
+ 
+  late Future<List<Movie>> trendingMovies;
+  late Future<List<Movie>> topRatedMovies;
+  late Future<List<Movie>> airingTodayMovies;
+  late Future<List<Movie>> upcomingMovies;
+  late Future<List<Movie>> horrorMovies;
+
+  @override
+  void initState() {
+    trendingMovies = Api().getTrending();
+    topRatedMovies = Api().gettopRated();
+    airingTodayMovies = Api().getairingToday();
+    upcomingMovies = Api().getupcoming();
+    horrorMovies = Api().gethorror();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,83 +59,98 @@ class ScreenHome extends StatelessWidget {
                     ListView(
                       children: [
                         const BackgroundCard(),
-                        const MainTittleCard(
-                          title: "Released in the Past Year",
-                        ),
+                        MainTitleCard(title: "Releasing Today", movies: trendingMovies),
                         Kheight,
                         Kheight,
-                        const MainTittleCard(
-                          title: "Trending Now",
-                        ),
+                       MainTitleCard(title: "Released Now", movies: topRatedMovies),
                         Kheight,
                         Kheight,
                         //////////////////////////////
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const MainTitle(
-                              title: "Top 10 TV Shows In India Today ",
-                            ),
-                            LimitedBox(
-                              maxHeight: 250,
-                              child: ListView(
-                                physics: const BouncingScrollPhysics(),
-                                padding: const EdgeInsets.all(5),
-                                scrollDirection: Axis.horizontal,
-                                children: List.generate(
-                                  10,
-                                  (index) => Padding(
-                                    padding: const EdgeInsets.only(
-                                        right:
-                                            12.0),
-                                    child: NumberCard(
-                                      index: index,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+         Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: MainTitle(title: 'Popular Movies'),
+        ),
+        FutureBuilder(
+          future: airingTodayMovies,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('error:${snapshot.error}');
+            } else if (snapshot.hasData) {
+              return LimitedBox(
+                maxHeight: 200,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: List.generate(
+                    10,
+                    (index) {
+                      final movie = snapshot.data![index];
+                      final image =
+                          constants.ImagePath + (movie.poster_path??"");
+                      return NumberCard(index: index, image: image);
+                    },
+                  ),
+                ),
+              );
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
+        ),
+        Kheight
+      ],
+    ),
                         //////////////////////////////
-                        const MainTittleCard(title: "Tense Drama"),
+                        MainTitleCard(title: "Top Rated Movies", movies: upcomingMovies),
                         Kheight,
                         Kheight,
-                        const MainTittleCard(title: "South Indian Mmovies")
+                       MainTitleCard(title: "Horror Movies", movies:horrorMovies),
                       ],
                     ),
-                    scrollNotifier.value==true?   
-                    AnimatedContainer(
-                      duration:Duration(milliseconds:1000),
-                      width: double.infinity,
-                      height: 100, 
-                      color:KBlackcolor.withOpacity(0.5),
-                      child: Column(children: [
-                        Row(
-                          children: [
-                            Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwZ05FOAriZHJ30ZN_FPtRje-U-plD4RHurQ&usqp=CAU",
-                            width:50,height:70,),
-                             const Spacer(),
-                                const Icon(Icons.cast,
-                                color: Colors.white,),
-                               KWidth,
-                                Container(
-                                  color: Colors.blue,
-                                  width: 28,
-                                  height: 28, 
+                    scrollNotifier.value == true
+                        ? AnimatedContainer(
+                            duration: const Duration(milliseconds: 1000),
+                            width: double.infinity,
+                            height: 100,
+                            color: KBlackcolor.withOpacity(0.5),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.network(
+                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwZ05FOAriZHJ30ZN_FPtRje-U-plD4RHurQ&usqp=CAU",
+                                      width: 50,
+                                      height: 70,
+                                    ),
+                                    const Spacer(),
+                                    const Icon(
+                                      Icons.cast,
+                                      color: Colors.white,
+                                    ),
+                                    KWidth,
+                                    Container(
+                                      color: Colors.blue,
+                                      width: 28,
+                                      height: 28,
+                                    ),
+                                    KWidth
+                                  ],
                                 ),
-                                KWidth
-                          ],
-                        ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                          Text("TV Shows"),
-                          Text("Movies"),
-                          Text("Categories"),
-                        ],)
-                      ],),
-                    ):Kheight
+                                const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text("TV Shows"),
+                                    Text("Movies"),
+                                    Text("Categories"),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        : Kheight
                   ]),
                 );
               })),
