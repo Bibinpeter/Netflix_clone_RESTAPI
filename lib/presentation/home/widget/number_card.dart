@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:netflixapi/core/colors/colors.dart';
 
 class NumberCard extends StatelessWidget {
-   NumberCard({super.key,required this.index,
-   required this.image});
-final int index;
-final String image;
+  const NumberCard({super.key, required this.index, required this.image});
+  final int index;
+  final String image;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-         Row(
+        Row(
           children: [
             const SizedBox(
               width: 40,
@@ -27,32 +26,34 @@ final String image;
             ),
           ],
         ),
-      Positioned(
-  left: 10,
-  top: 38,
-  child: ShaderMask(
-    shaderCallback: (Rect bounds) {
-      return const LinearGradient(
-        colors: [Color.fromARGB(255, 255, 255, 255), Color.fromARGB(255, 0, 0, 0)],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ).createShader(bounds);
-    },
-    child: BorderedText(
-      strokeColor:Kwhitecolor,
-      child: Text(
-        "${index+1}",
-        style: const TextStyle(
-          fontSize: 150,
-          fontWeight: FontWeight.w800,
-          color: Color.fromARGB(255, 192, 191, 194), // Set your desired text color here
-        ),
-      ),
-    ),
-  ),
-)
-
-   
+        Positioned(
+          left: 10,
+          top: 38,
+          child: ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return const LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 255, 255),
+                  Color.fromARGB(255, 0, 0, 0)
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ).createShader(bounds);
+            },
+            child: BorderedText(
+              strokeColor: Kwhitecolor,
+              child: Text(
+                "${index + 1}",
+                style: const TextStyle(
+                  fontSize: 150,
+                  fontWeight: FontWeight.w800,
+                  color: Color.fromARGB(
+                      255, 192, 191, 194), // Set your desired text color here
+                ),
+              ),
+            ),
+          ),
+        )
       ],
     );
   }

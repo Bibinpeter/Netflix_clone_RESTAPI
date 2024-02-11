@@ -1,47 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:netflixapi/core/colors/constants.dart';
 import 'package:netflixapi/presentation/search/title.dart';
+import 'package:netflixapi/presentation/search/widget/screen_searchh.dart';
  
- const imageUrl="https://media.themoviedb.org/t/p/w220_and_h330_face/7lTnXOy0iNtBAdRP3TZvaKJ77F6.jpg";
+
 class SearchResultWidget extends StatelessWidget {
-  const SearchResultWidget({super.key});
+  const SearchResultWidget({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SearchTextTile(title: "Movies & TV"),
+        const SearchTextTile(title: 'Movies & TV'),
         Kheight,
         Expanded(
-            child: GridView.count(
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-                shrinkWrap: true,
-                crossAxisCount: 3,
-                childAspectRatio:1/1.4 ,
-                children: List.generate(20, (index) {
-                  return MainCardd();
-                })
-                )
-                )
+          child: ValueListenableBuilder(
+            valueListenable: searchNotifier,
+            builder: (context, snapshot, _) {
+              if (snapshot.isEmpty) {
+                return const Center(child: Text('No results found'));
+              } else if (snapshot.isNotEmpty) {
+                return GridView.builder(
+                  itemCount: snapshot.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 2 / 3, // Adjust aspect ratio as needed
+                  ),
+                  itemBuilder: (context, index) {
+                    final movies = snapshot[index];
+                    final image = constants.ImagePath + (movies.poster_path ?? '');
+                    return MainMovieCard(image: image);
+                  },
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ),
       ],
     );
   }
 }
 
-class MainCardd extends StatelessWidget {
-  const MainCardd({super.key});
+
+class MainMovieCard extends StatelessWidget {
+  const MainMovieCard({super.key, required this.image});
+  final String image;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-       image: const DecorationImage(image: 
-       NetworkImage(imageUrl),
-       fit: BoxFit.cover) ,
-       borderRadius: BorderRadius.circular(10),
-      ),
+          image: DecorationImage(image: NetworkImage(image), fit: BoxFit.cover),
+          borderRadius: BorderRadius.circular(8)),
     );
   }
 }

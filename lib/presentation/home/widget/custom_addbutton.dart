@@ -15,9 +15,9 @@ class CustomAddButton extends StatelessWidget {
         Icon(
           icon,
           color: Kwhitecolor,
-          size: 30,
+          size: 23,
         ),
-        Text(title),
+        Text(title,style: const TextStyle(fontSize: 12),),
       ],
     );
   }

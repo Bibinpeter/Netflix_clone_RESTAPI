@@ -1,140 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:netflixapi/core/colors/colors.dart';
+import 'package:netflixapi/api/api.dart';
 import 'package:netflixapi/core/colors/constants.dart';
+import 'package:netflixapi/models/movie.dart';
+import 'package:netflixapi/presentation/new&hot/widgets/coming_soon_info_card.dart';
 
-class Comingsoon extends StatelessWidget {
-  const Comingsoon({
-    super.key,
-  });
+
+ValueNotifier<List<Movie>> comingSoonMovieNotifier = ValueNotifier([]);
+
+class ComingSoonWidget extends StatefulWidget {
+  const ComingSoonWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-     Size size = MediaQuery.of(context).size;
-    return Row(
-      children: [
-        const SizedBox(
-          width: 50,
-          height: 450,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "FEB",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
-                ),
-              ),
-              Text(
-                "11",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2),
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          width: size.width - 60,
-          height: 480,
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start ,
-             children: [
-              VideoWidget(),
-              Kheight,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Kunfu Panda",
-                    style: TextStyle(
-                      fontSize: 33,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Icon(
-                            Icons.notifications,
-                            size: 18 ,
-                            color: Kwhitecolor,
-                          ),
-                          Text(
-                            "Remind me",
-                            style: TextStyle(fontSize: 10),
-                          )
-                        ],
-                      ),
-                      KWidth,
-                      KWidth,
-                      Column(
-                        children: [
-                          Icon(
-                            Icons.info,
-                            color: Kwhitecolor,
-                            size: 18,
-                          ),
-                          Text('info', style: TextStyle(fontSize: 10),)
-                        ],
-                      ),
-                      KWidth,
-                      KWidth,
-                    ],
-                  ),
-                ],
-              ),
-              Kheight,
-              Text("Coming On Friday"),
-              Kheight, 
-              Text('Kunfu Panda',style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700),),
-                Text("Landing the lead in the school muscical is a\ndream come true for jodi until the presurre\nsends her confidence-and her relationship\nintoa tallpin.",style: TextStyle(color: Colors.grey),)
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  State<ComingSoonWidget> createState() => _ComingSoonWidgetState();
 }
 
-class VideoWidget extends StatelessWidget {
-  const VideoWidget({
-    super.key,
-  });
+class _ComingSoonWidgetState extends State<ComingSoonWidget> {
+  @override
+  void initState() {
+    fetchmovies();
+    super.initState();
+  }
+
+  void fetchmovies() async {
+    comingSoonMovieNotifier.value = await Api().getupcomingmovies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          height: 200,
-          child: Image.network(
-            "https://media.themoviedb.org/t/p/w533_and_h300_bestv2/xMXK7OoT5GkaZrzQBque6nGwuL1.jpg",
-            fit: BoxFit.cover,
-          ),
-        ),
-        Positioned(
-          bottom: 5,
-          right: 10,
-          child: CircleAvatar(
-            backgroundColor: Colors.black.withOpacity(0.5),
-            radius: 20,
-            child: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.volume_off,
-                  size: 20,
-                  color: Kwhitecolor,
-                )),
-          ),
-        ),
-      ],
+    return ValueListenableBuilder(
+      valueListenable: comingSoonMovieNotifier,
+      builder: (context, snapshot, _) {
+        if (snapshot.isEmpty) {
+          return (const Text('error'));
+        } else if (snapshot.isNotEmpty) {
+          return Expanded(
+              child: ListView.separated(
+            itemCount: snapshot.length,
+            separatorBuilder: (context, index) => const SizedBox(
+              height: 20,
+            ),
+            itemBuilder: (context, index) {
+              final movie = snapshot[index];
+              final imageurl =
+                  constants.ImagePath+ (movie.backdrop_path ?? '');
+              final releaseDate = movie.release_date?? '';
+              final overview = movie.overview ?? '';
+              final orignalTitle = movie.original_title?? '';
+              return ComingSoonInfoCard(
+                  releaseDate: releaseDate,
+                  originalTitle: orignalTitle,
+                  overview: overview,
+                  imageUrl: imageurl);
+            },
+          ));
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }

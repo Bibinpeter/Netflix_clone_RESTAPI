@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:netflixapi/core/colors/constants.dart';
 import 'package:netflixapi/presentation/widgets/main_homecard.dart';
 import 'package:netflixapi/presentation/widgets/main_title.dart';
@@ -35,6 +34,7 @@ class MainTitleCard extends StatelessWidget {
 
                   scrollDirection: Axis.horizontal,
                   children: List.generate(
+                    
                     snapshot.data!.length,
                     (index) {
                       final movie = snapshot.data![index];

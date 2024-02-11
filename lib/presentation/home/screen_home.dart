@@ -21,7 +21,6 @@ class ScreenHome extends StatefulWidget {
 }
 
 class _ScreenHomeState extends State<ScreenHome> {
- 
   late Future<List<Movie>> trendingMovies;
   late Future<List<Movie>> topRatedMovies;
   late Future<List<Movie>> airingTodayMovies;
@@ -57,56 +56,63 @@ class _ScreenHomeState extends State<ScreenHome> {
                   },
                   child: Stack(children: [
                     ListView(
+                      physics: const BouncingScrollPhysics(),
                       children: [
                         const BackgroundCard(),
-                        MainTitleCard(title: "Releasing Today", movies: trendingMovies),
+                        MainTitleCard(
+                            title: "Releasing Today", movies: trendingMovies),
                         Kheight,
                         Kheight,
-                       MainTitleCard(title: "Released Now", movies: topRatedMovies),
+                        MainTitleCard(
+                            title: "Released Now", movies: topRatedMovies),
                         Kheight,
                         Kheight,
                         //////////////////////////////
-Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: MainTitle(title: 'Popular Movies'),
-        ),
-        FutureBuilder(
-          future: airingTodayMovies,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('error:${snapshot.error}');
-            } else if (snapshot.hasData) {
-              return LimitedBox(
-                maxHeight: 200,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: List.generate(
-                    10,
-                    (index) {
-                      final movie = snapshot.data![index];
-                      final image =
-                          constants.ImagePath + (movie.poster_path??"");
-                      return NumberCard(index: index, image: image);
-                    },
-                  ),
-                ),
-              );
-            } else {
-              return CircularProgressIndicator();
-            }
-          },
-        ),
-        Kheight
-      ],
-    ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              child: MainTitle(title: 'Most 10  Popular Movies'),
+                            ),
+                            FutureBuilder(
+                              future: airingTodayMovies,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('error:${snapshot.error}');
+                                } else if (snapshot.hasData) {
+                                  return LimitedBox(
+                                    maxHeight: 200,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: List.generate(
+                                        10,
+                                        (index) {
+                                          final movie = snapshot.data![index];
+                                          final image = constants.ImagePath +
+                                              (movie.poster_path ?? "");
+                                          return NumberCard(
+                                              index: index, image: image);
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return const CircularProgressIndicator();
+                                }
+                              },
+                            ),
+                            Kheight
+                          ],
+                        ),
                         //////////////////////////////
-                        MainTitleCard(title: "Top Rated Movies", movies: upcomingMovies),
+                        MainTitleCard(
+                            title: "Top Rated Movies", movies: upcomingMovies),
                         Kheight,
                         Kheight,
-                       MainTitleCard(title: "Horror Movies", movies:horrorMovies),
+                        MainTitleCard(
+                            title: "Horror Movies", movies: horrorMovies),
                       ],
                     ),
                     scrollNotifier.value == true
@@ -130,10 +136,11 @@ Column(
                                       color: Colors.white,
                                     ),
                                     KWidth,
-                                    Container(
-                                      color: Colors.blue,
-                                      width: 28,
-                                      height: 28,
+                                    SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: Image.network(
+                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4qo_pLvLYfs9X-Ej51KnDgeVH7UjLKm_4Cw&usqp=CAU"),
                                     ),
                                     KWidth
                                   ],

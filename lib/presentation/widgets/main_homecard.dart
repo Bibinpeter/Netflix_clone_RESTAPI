@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
  
 
 class MainCardHome extends StatelessWidget {
-   MainCardHome({
+   const MainCardHome({
     super.key,
     required this.image,
   });

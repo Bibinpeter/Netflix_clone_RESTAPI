@@ -1,10 +1,10 @@
-// ignore: file_names
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:netflixapi/core/colors/colors.dart';
 import 'package:netflixapi/core/colors/constants.dart';
-import 'package:netflixapi/presentation/home/widget/custom_addbutton.dart';
 import 'package:netflixapi/presentation/new&hot/widgets/coming_soon.dart';
 import 'package:netflixapi/presentation/new&hot/widgets/everyoneswatching.dart';
+import '../../core/colors/colors.dart';
 
 class ScreenNewAndHot extends StatelessWidget {
   const ScreenNewAndHot({super.key});
@@ -15,69 +15,69 @@ class ScreenNewAndHot extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(100),
-          child: AppBar(
-            backgroundColor: KBlackcolor,
-            title: const Text(
-              "New & Hot",
-              style: TextStyle(
-                  color: Kwhitecolor,
+            preferredSize: const Size.fromHeight(95),
+            child: AppBar(
+              title: const Text(
+                "New &  Hot",
+                style: TextStyle(
                   fontSize: 30,
-                  fontWeight: FontWeight.w500),
-            ),
-            actions: [
-              const Icon(
-                Icons.cast,
-                color: Colors.white,
-              ),
-              KWidth,
-              Container(
-                color: Colors.blue,
-                width: 28,
-                height: 28,
-              ),
-              KWidth,
-            ],
-            bottom: TabBar(
-              unselectedLabelColor: Kwhitecolor,
-              labelColor: KBlackcolor,
-              indicator: BoxDecoration(
-                  color: Kwhitecolor, borderRadius: BorderRadius.circular(20)),
-              tabs: const [
-                Tab(
-                  text: "   🍿Coming Soon   ",
+                  color: Kwhitecolor,
+                  fontWeight: FontWeight.w600,
                 ),
-                Tab(
-                  text: "   👀 Everyone watching   ",
-                )
+              ),
+              actions: [
+                const Icon(
+                  Icons.cast,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              KWidth,
+                SizedBox(
+                  height: 60 ,
+                  width: 50,
+                  child: Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4qo_pLvLYfs9X-Ej51KnDgeVH7UjLKm_4Cw&usqp=CAU"),
+                ),
+                KWidth,
               ],
-            ),
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildComingSoon(),
-            _buildEveryOneWathing(),
-          ],
-        ),
+              bottom: TabBar(
+                  unselectedLabelColor: Kwhitecolor,
+                  labelColor: KBlackcolor,
+                  isScrollable: true,
+                  labelStyle: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                  indicator: BoxDecoration(
+                    color: Kwhitecolor,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  tabs: const [
+                    Tab(
+                      text: "   🍿Coming Soon   ",
+                    ),
+                    Tab(
+                      text: "  🔥Everyone's watching  ",
+                    )
+                  ]),
+            )),
+        body: TabBarView(children: [
+          buildComingSoon(),
+          buildEveryonesWatching(),
+        ]),
       ),
     );
   }
-////////// TAB 1 FN
-  Widget _buildComingSoon() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: 10,
-      itemBuilder: (context, index) => const Comingsoon(),
-    );
+
+  Widget buildComingSoon() {
+    return const ComingSoonWidget();
   }
-///////// TAB 2 FN
-  Widget _buildEveryOneWathing() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: 10,
-      itemBuilder: (context, index) => const EveryonesWatchingwidget(),
+
+  buildEveryonesWatching() {
+    return  const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        
+        
+        Expanded(child: EveryonesWatchingWidget()),
+      ],
     );
   }
 }
-
